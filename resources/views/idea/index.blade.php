@@ -4,13 +4,8 @@
             <h1 class=" text-3xl font-bold">Ideas</h1>
             <p class="text-muted-foreground text-sm mt-2">Capture your toughts. Make a plan</p>
 
-            <x-card
-                x-data
-                @click="$dispatch('open-modal', 'create-idea')"
-                is="button"
-                type="button"
-                class="mt-10 cursor-pointer h-32 w-full text-left"
-                >
+            <x-card x-data @click="$dispatch('open-modal', 'create-idea')" is="button" type="button"
+                class="mt-10 cursor-pointer h-32 w-full text-left">
                 <p>What's the idea?</p>
             </x-card>
         </header>
@@ -18,10 +13,8 @@
         <div>
             <a href="/ideas" class=" btn {{ request()->has('status') ? 'btn-outlined' : '' }}">All</a>
             @foreach (App\IdeaStatus::cases() as $status)
-                <a
-                href="/ideas?status={{ $status->value }}"
-                class="btn {{ request('status') === $status ->value ? '' : 'btn-outlined' }}"
-                >
+                <a href="/ideas?status={{ $status->value }}"
+                    class="btn {{ request('status') === $status->value ? '' : 'btn-outlined' }}">
                     {{ $status->label() }} <span class="text-xs pl-1">{{ $statusCounts->get($status->value) }}</span>
                 </a>
             @endforeach
@@ -37,12 +30,17 @@
                                 {{ $idea->status->label() }}
                             </x-status-label>
                         </div>
-                        <div class="mt-5 line-clamp-3">{{$idea->description}}</div>
-                        <div class="mt-4">{{$idea->created_at->diffforHUmans()}}</div>
+                        <div class="mt-5 line-clamp-3">{{ $idea->description }}</div>
+                        @if ($idea->created_at)
+                            <div class="mt-4">{{ $idea->created_at->diffforHumans() }}</div>
+                        @endif
                     </x-card>
                 @empty
                     <x-card>
-                        <p>No ideas at this time.</p>
+                        <p>There are no ideas
+                            {{ request()->has('status') ? strtolower(\App\IdeaStatus::tryFrom(request('status'))?->label()) : '' }}
+                            at this time.
+                        </p>
                     </x-card>
                 @endforelse
             </div>
