@@ -4,8 +4,8 @@ use Illuminate\Support\Facades\Auth;
 
 test('registers a user', function () {
     visit('/register')
-        ->fill('name','John Doe')
-        ->fill('email',"john@example.com")
+        ->fill('name', 'John Doe')
+        ->fill('email', 'john@example.com')
         ->fill('password', 'password123!@')
         ->click('Create Account')
 
@@ -15,6 +15,6 @@ test('registers a user', function () {
 
     expect(Auth::user())->toMatchArray([
         'name' => 'John Doe',
-        'email' => "john@example.com"
+        'email' => 'john@example.com',
     ]);
 });
