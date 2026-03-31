@@ -24,6 +24,14 @@
         <div class="mt-8 space-y-6">
             <h1 class="font-bold text-3xl">{{ $idea->title }}</h1>
 
+            @if ($idea->image_path)
+                <div class="rounded-lg overflow-hidden">
+                    <img src="{{ asset('storage/' . $idea->image_path) }}" alt=""
+                        class="w-full h-auto object-cover">
+                </div>
+            @endif
+
+
             <div class="mt-2 flex gap-x-3 items-center">
                 <x-status-label :status="$idea->status->value"> {{ $idea->status->label() }}</x-status-label>
 
@@ -33,12 +41,37 @@
                     @endif
                 </div>
             </div>
+            @if ($idea->description)
+                <x-card class="mt-5">
+                    <div class="text-foreground max-w-none cursor-pointer">{{ $idea->description }}</div>
+                </x-card>
+            @endif
 
-            <x-card class="mt-5">
-                <div class="text-foreground max-w-none cursor-pointer">{{ $idea->description }}</div>
-            </x-card>
+            @if ($idea->steps->count())
+                <div>
+                    <h3 class="font-bold text-xl mt-5">Actionable Steps</h3>
 
-            @if ($idea->links)
+                    <div class="mt-3 space-y-2">
+                        @foreach ($idea->steps as $step)
+                            <x-card class="p-0">
+                                <form method="POST" action="{{ route('step.update', $step) }}">
+                                    @csrf
+                                    @method('PATCH')
+                                    <div class="flex items-center gap-x-3 ">
+                                        <button type="submit" role="checkbox"
+                                            class="size-5 flex items-center justify-center rounded-lg text-pr   imary-foreground {{ $step->completed ? 'bg-primary' : 'border border-primary' }}">&check;</button>
+                                        <span
+                                            class="{{ $step->completed ? 'line-through text-muted-foreground' : '' }}">
+                                            {{ $step->description }}
+                                        </span>
+                                    </div>
+                                </form>
+                            </x-card>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+            @if ($idea->links->count())
                 <div>
                     <h3 class="font-bold text-xl mt-5">Links</h3>
 

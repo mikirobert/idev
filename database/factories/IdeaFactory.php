@@ -20,9 +20,24 @@ class IdeaFactory extends Factory
     {
         return [
             'user_id' => User::factory(),
-            'title' => fake()->sentence(),
-            'description' => fake()->paragraph(),
-            'links' => [fake()->url()],
+            'title' => fake()->sentence(4),
+            'description' => fake()->paragraphs(2, true),
+            'status' => fake()->randomElement(\App\IdeaStatus::cases())->value,
+            'links' => [fake()->url(), fake()->url()], // links stays here if it's a JSON column
+            'image_path' => null,
         ];
+    }
+
+    /**
+     * Configure the factory to add steps after creation.
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (\App\Models\Idea $idea) {
+            // Create 3 random steps for this idea
+            \App\Models\Step::factory()->count(3)->create([
+                'idea_id' => $idea->id,
+            ]);
+        });
     }
 }

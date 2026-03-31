@@ -1,9 +1,15 @@
-@props([ 'label', 'name', 'type' => 'text' ])
+@props(['label' => false, 'name', 'type' => 'text'])
 <div class="space-y-2">
-    <label for="{{ $name }}" class="label">{{ $label }}</label>
-    <input type={{ $type }} class="input" id="{{ $name }}" name="{{ $name }}" value="{{ old($name) }}" {{ $attributes }}>
+    @if ($label)
+        <label for="{{ $name }}" class="label">{{ $label }}</label>
+    @endif
 
-    @error($name)
-    <p class="error">{{ $message }}</p>
-    @enderror
+    @if ($type === 'textarea')
+        <textarea class="textarea" id="{{ $name }}" name="{{ $name }}" {{ $attributes }}>{{ old($name) }}</textarea>
+    @else
+        <input type={{ $type }} class="input" id="{{ $name }}" name="{{ $name }}"
+            value="{{ old($name) }}" {{ $attributes }}>
+    @endif
+
+    <x-form.error name={{ $name }} />
 </div>
