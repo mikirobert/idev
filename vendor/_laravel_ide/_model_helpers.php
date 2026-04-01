@@ -14,6 +14,7 @@ namespace App\Models {
      * @property string $title
      * @property int $user_id
      * @property int $id
+     * @property-read mixed $formatted_description
      * @property-read \App\Models\User $user
      * @property-read \Illuminate\Database\Eloquent\Collection<int, \App\Models\Step> $steps
      * @property-read int|null $steps_count
