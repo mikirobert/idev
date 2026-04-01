@@ -12,12 +12,17 @@ class Step extends Model
 {
     use HasFactory;
 
-    // Use the boolean false, not the string 'false'
+    // ADD THIS LINE: This allows these fields to be saved via create() or createMany()
+    protected $fillable = [
+        'description',
+        'completed',
+        'idea_id',
+    ];
+
     protected $attributes = [
         'completed' => false,
     ];
 
-    // This ensures Laravel treats 0/1 from the DB as true/false in PHP
     protected $casts = [
         'completed' => 'boolean',
     ];
