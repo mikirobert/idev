@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Notifications\EmailChanged;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -22,12 +23,13 @@ class ProfileController extends Controller
 
     public function update(Request $request)
     {
-
-        $user = Auth::user();
+        /** @var User $user */
+        $user = $request->user(); // Preferred over Auth::user() in controllers
 
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'max:255',
+            'email' => [
+                'required', 'string', 'max:255',
                 Rule::unique('users', 'email')->ignore($user->id),
             ],
             'password' => ['nullable', Password::defaults()],
@@ -38,9 +40,11 @@ class ProfileController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => $request->password ?? $user->password,
+            'password' => $request->password ? bcrypt($request->password) : $user->password,
         ]);
+
         $newEmail = $request->email;
+
         if ($originalEmail !== $newEmail) {
             Notification::route('mail', $originalEmail)
                 ->notify(new EmailChanged($user, $originalEmail));

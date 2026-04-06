@@ -7,6 +7,7 @@ use App\Http\Controllers\RegisteredUserController;
 use App\Http\Controllers\SessionsController;
 use App\Http\Controllers\StepController;
 use Illuminate\Support\Facades\Route;
+use Livewire\Volt\Volt;
 
 // Route::get('/', fn () => view('welcome'));
 
@@ -32,3 +33,10 @@ Route::post('/logout', [SessionsController::class, 'destroy'])->middleware('auth
 
 Route::get('profile/edit', [ProfileController::class, 'edit'])->name('profile.edit')->middleware('auth');
 Route::patch('profile/edit', [ProfileController::class, 'update'])->name('profile.update')->middleware('auth');
+
+
+Route::livewire('/livelive', 'pages::post.create');
+
+Volt::route('/posts', 'post.index')->name('posts.index');
+
+

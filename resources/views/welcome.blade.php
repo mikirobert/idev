@@ -1,3 +1,1 @@
-<x-layout>
-    <p>Home page.</p>
-</x-layout>
+<x-layout></x-layout>
